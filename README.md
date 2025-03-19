@@ -1,23 +1,51 @@
 
 # ThoughtStream: Reflect, Record, Remember
 
-CS 483 Final Project
+WIP
 
+## Setup
 
-## Run
+### Initial Setup
+Install Required Packages
+```bash
+  npm install express mongoose dotenv cors axios
+```
 
-To run this project run
+Install Required Packages for Development
+```bash
+  npm install nodemon --save-dev
+```
+
+### Run
+
+Production
 
 ```bash
   npm start
 ```
 
-
-## Development
-
-To set this project for development
+Development
 
 ```bash
   npm run dev
 ```
 
+## API Usage Guide
+
+WIP
+
+## Environment Variables
+
+WIP
+
+## Common Issues & Debugging Tips
+
+WIP
+
+## API Testing Results
+
+WIP
+
+## Extra Credit
+
+WIP
