@@ -49,8 +49,9 @@ DELETE /api/diary/:id
 
 ## Environment Variables
 
-MONGO_URI="mongodb+srv://://<username>:<password>@cluster0.nahw65o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-WEATHER_API="<open weather api token>"
+MONGO_URI="mongodb+srv://USERNAME:PASSWORD@cluster0.nahw65o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+WEATHER_API="open weather api token"
 
 ## Common Issues & Debugging Tips
 
