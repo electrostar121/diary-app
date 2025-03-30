@@ -8,12 +8,12 @@ WIP
 ### Initial Setup
 Install Required Packages
 ```bash
-  npm install express mongoose dotenv cors axios
+npm install express mongoose dotenv cors axios
 ```
 
 Install Required Packages for Development
 ```bash
-  npm install nodemon --save-dev
+npm install nodemon --save-dev
 ```
 
 ### Run
@@ -21,13 +21,13 @@ Install Required Packages for Development
 Production
 
 ```bash
-  npm start
+npm start
 ```
 
 Development
 
 ```bash
-  npm run dev
+npm run dev
 ```
 
 ## API Usage Guide
