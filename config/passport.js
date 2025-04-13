@@ -1,10 +1,10 @@
-// File: config/passport.js
 // Import the Passport.js authentication middleware
 import passport from "passport";
 // Import the Google OAuth2 strategy and rename it for clarity
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 // Import the Mongoose User model to query the database
 import User from "../models/User.js";
+
 /**
 * Configure the Google OAuth2 strategy for Passport middleware.
 * This tells Passport how to handle authentication with Google.
@@ -69,6 +69,7 @@ passport.use(
 passport.serializeUser((user, done) => {
     done(null, user.id); // Only store the user ID in the session
 });
+
 /**
 * Deserialize user from the session.
 *

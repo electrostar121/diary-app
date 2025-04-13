@@ -1,6 +1,3 @@
-// File: middleware/authMiddleware.js
-// Middleware function to protect routes in the ThoughtStream app
-// Ensures that only authenticated users can access certain API endpoints
 /**
 * Middleware to check if a user is authenticated.
 *

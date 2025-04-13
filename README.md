@@ -55,7 +55,7 @@ WEATHER_API="open weather api token"
 
 ## Common Issues & Debugging Tips
 
-Authorization not implemented yet, so currently user id is hard-coded if no user id is provided. Will remove once authorization is implemented.
+None
 
 ## API Testing Results
 

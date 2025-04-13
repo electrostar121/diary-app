@@ -1,5 +1,3 @@
-// File: routes/authRoutes.js
-// Defines authentication routes for the ThoughtStream app using Google OAuth2 via Passport.js
 import express from "express";
 import passport from "passport";
 
@@ -56,7 +54,7 @@ router.get("/google/callback",
 router.get("/logout", (req, res, next) => {
     req.logout(err => {
         if (err) {
-            return next(err); // Pass errors to the default error handler
+            res.status(400).send("Error: " + err)
         }
 
         // Optionally destroy session data completely
