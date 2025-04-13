@@ -6,6 +6,7 @@ import {
     updateEntry,
     deleteEntry,
 } from "../controllers/diaryController.js";
+import { ensureAuthenticated } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -14,19 +15,19 @@ const router = express.Router();
 * @desc Fetch all diary entries
 * @access Public (Authentication will be added in Part 2)
 */
-router.get("/", getAllEntries);
+router.get("/", ensureAuthenticated, getAllEntries);
 
 /**
 * @route GET /api/diary/:id
 * @desc Fetch a specific diary entry by ID
 * @access Public (Authentication will be added in Part 2)
 */
-router.get("/:id", getEntryById);
+router.get("/:id", ensureAuthenticated, getEntryById);
 
-router.post("/", createEntry);
+router.post("/", ensureAuthenticated, createEntry);
 
-router.put("/:id", updateEntry);
+router.put("/:id", ensureAuthenticated, updateEntry);
 
-router.delete("/:id", deleteEntry);
+router.delete("/:id", ensureAuthenticated, deleteEntry);
 
 export default router;
