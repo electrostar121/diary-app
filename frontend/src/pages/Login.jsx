@@ -28,7 +28,7 @@ function Login() {
 
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Typography variant="h3" component="h1" gutterBottom sx={{ fontFamily: "system-ui, Avenir, Helvetica, Arial, sans-serif", alignItems: "center", fontWeight: "bold" }}>
+       <Typography variant="h3" component="h1" gutterBottom sx={{ fontFamily: "system-ui, Avenir, Helvetica, Arial, sans-serif", alignItems: "center", fontWeight: "bold" }}>
         ThoughtStream
       </Typography>
       <GoogleLogin
