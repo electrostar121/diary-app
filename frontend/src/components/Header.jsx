@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import "../styles/index.css";
 
 function Header() {
   const { user, logout } = useContext(AuthContext);

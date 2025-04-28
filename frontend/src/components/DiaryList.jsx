@@ -1,5 +1,5 @@
 import React from "react";
-import DiaryEntryCard from "./DiaryEntryCard";
+import DiaryEntryCard from "./DiartEntryCard"
 
 function DiaryList({ entries }) {
   return (
