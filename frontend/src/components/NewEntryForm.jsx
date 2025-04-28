@@ -8,7 +8,14 @@ function NewEntryForm({ onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ title, content });
+    const entry = {
+      "title": title,
+      "content": content,
+      "reflection": null,
+      "tags": null,
+      "location": ""
+    }
+    onSave(entry);
     setTitle("");
     setContent("");
   };
