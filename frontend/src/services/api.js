@@ -13,4 +13,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+export async function fetchEntries() {
+  const response = await api.get("/diary");
+  return response.data;
+}
+
+export async function createEntry(entry) {
+  const response = await api.post("/diary", entry);
+  return response.data;
+}
+
 export default api;
