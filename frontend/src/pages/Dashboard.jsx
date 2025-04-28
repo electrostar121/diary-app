@@ -46,7 +46,6 @@ function Dashboard() {
       <Header />
 
       <div style={isFormOpen ? styles.blurredContent : styles.content}>
-        <h1>Welcome to your Dashboard</h1>
         <DiaryList entries={entries} />
         <button style={styles.newEntryButton} onClick={handleNewEntryClick}>+</button>
       </div>
@@ -60,6 +59,7 @@ const styles = {
   container: {
     position: "relative",
     minHeight: "100vh",
+    minWidth: "100vw",
     display: "flex",
     flexDirection: "column",
   },
