@@ -17,6 +17,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 
+import DiaryList from "./DiaryList"
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
@@ -73,7 +74,7 @@ function Header() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedTag, setSelectedTag] = React.useState("");
   const [selectedLocation, setSelectedLocation] = React.useState("");
-  
+  const [isSearching, setIsSearching] = React.useState(false);
   
   const handleLogout = () => {
     logout();
@@ -90,16 +91,33 @@ function Header() {
   const { token } = useContext(AuthContext);
 
 
+  const handleClearSearch = async () => {
+    try {
+      setSearchQuery("");
+      setSelectedTag("");
+      setSelectedLocation("");
+  
+      const response = await axios.get("http://localhost:5000/api/diary", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      setEntries(response.data);
+      setIsSearching(false); 
+    } catch (error) {
+      console.error("Error clearing search:", error);
+    }
+  };
+  
+
   const handleSearch = async () => {
     try {
-    
       const params = {};
       if (searchQuery) params.search = searchQuery;
-      if (selectedTag) params.tag = selectedTag;
+      if (selectedTag) params.tag = selectedTag.toLowerCase();
       if (selectedLocation) params.location = selectedLocation;
   
-      console.log("Token being sent:", token);
-
       const response = await axios.get("http://localhost:5000/api/diary", {
         params: params,
         headers: {
@@ -107,10 +125,9 @@ function Header() {
         }
       });
   
-      console.log("Entries:", response.data);
-  
       setEntries(response.data);
-      console.log(response.data);
+      setIsSearching(true);  
+  
     } catch (error) {
       console.error("Error fetching entries:", error);
     }
@@ -160,6 +177,15 @@ function Header() {
               sx={{ ml: 2 }}
             >
               Search
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleClearSearch}
+              sx={{ ml: 1 }}
+              disabled={!isSearching} 
+            >
+              X
             </Button>
 
           <Autocomplete
@@ -224,6 +250,7 @@ function Header() {
           )}
         </Toolbar>
       </AppBar>
+      <DiaryList entries={entries} />
     </Box>
   );
 };
