@@ -28,7 +28,8 @@ export const fetchWeather = async (location = "Portland, US") => {
 
 export const getWeather = async(req, res) => {
     try{
-        const { location } = req.body;
+        const { location } = req.query;
+        console.log(location);
         const weatherData = await fetchWeather(location);
         res.status(200).json(weatherData);
     }catch(error){
@@ -48,19 +49,20 @@ export const fetchLocation = async (lat, lon) => {
 
         const data = await response.json();
 
-        console.log(data);
-
-        return data;
+        return {
+            city: data.name,
+            country: data.sys.country
+        };
     } catch (error) {
-        console.error("Error fetching location data:", error.message);
+        console.error("Error fetching weather data:", error.message);
         return null; // Return a fallback value
     }
 }
 
 export const getLocation = async(req, res) => {
     try{
-        const {lat, lon} = req.body;
-        const locationData = fetchLocation(lat, lon);
+        const {lon, lat} = req.query;
+        const locationData = await fetchLocation(lat, lon);
 
         res.status(200).json(locationData);
     } catch (error) {

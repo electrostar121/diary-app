@@ -27,18 +27,21 @@ export async function createEntry(entry) {
 /**
  * Fetch the current weather with the openWeather API
  */
-export async function fetchWeather() {
-  const response = await api.get("/weather");
-  // console.log(response.data);
+export async function fetchWeather(location) {
+  const response = await api.get("/weather", {
+    params: {
+      location: location
+    }
+  });
   return response.data;
 }
 
-export async function fetchLocation(lon, lat){
-  const params = {};
-  params.lon = lon;
-  params.lat = lat;
+export async function fetchLocation(lat, lon) {
   const response = await api.get("/weather/location", {
-    params: params
+    params: {
+      lat: lat,
+      lon: lon,
+    },
   });
   return response.data;
 }
