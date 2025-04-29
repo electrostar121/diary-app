@@ -119,7 +119,7 @@ function Header({ onSearch, onClear }) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Secret Diary
+            { user && user.name}'s Secret Diary 🤫
           </Typography>
 
           <Search>
