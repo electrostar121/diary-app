@@ -1,5 +1,5 @@
 import React from "react";
-import DiaryEntryCard from "./DiartEntryCard"
+import DiaryEntryCard from "./DiartEntryCard";
 
 import { Typography } from "@mui/material";
 function DiaryList({ entries, isSearching }) {
@@ -31,9 +31,8 @@ function DiaryList({ entries, isSearching }) {
 const styles = {
   list: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
-    gap: "20px",
-    marginTop: "20px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "20px"
     padding: "20px",
   },
 };
