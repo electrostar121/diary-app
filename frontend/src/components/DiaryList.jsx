@@ -30,8 +30,8 @@ function DiaryList({ entries, isSearching }) {
 }
 const styles = {
   list: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    display: "flex",
+    flexWrap: "wrap",
     gap: "20px",
     padding: "20px",
   },

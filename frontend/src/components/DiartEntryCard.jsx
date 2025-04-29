@@ -5,7 +5,8 @@ function DiaryEntryCard({ entry }) {
   return (
     <Card
       sx={{
-        maxWidth: 400,
+        maxWidth: "15rem",
+        minWidth: "15rem",
         backgroundColor: "#f0f0f0",
         borderRadius: 2,
         boxShadow: 3,
