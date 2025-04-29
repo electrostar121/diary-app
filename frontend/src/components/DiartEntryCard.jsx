@@ -51,7 +51,12 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
       <Card
         onClick={handleOpen}
         sx={{
-          maxWidth: 400,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+          maxWidth: "15rem",
+          minWidth: "15rem",
           backgroundColor: "#f0f0f0",
           borderRadius: 2,
           boxShadow: 3,
