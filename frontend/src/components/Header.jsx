@@ -207,27 +207,39 @@ function Header({ onSearch, onClear }) {
         transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <MenuItem disableRipple>
+          <Box
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
           <Autocomplete
             disablePortal
             options={tagOptions}
             sx={{ width: 200 }}
             value={selectedTag}
             onChange={(e, newValue) => setSelectedTag(newValue || "")}
+            onInputChange={(e, newInputValue) => setSelectedTag(newInputValue)}
             renderInput={(params) => <TextField {...params} label="Tag" />}
             freeSolo
           />
+          </Box>
         </MenuItem>
 
         <MenuItem disableRipple>
+        <Box
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
           <Autocomplete
             disablePortal
             options={locationOptions}
             sx={{ width: 200 }}
             value={selectedLocation}
             onChange={(e, newValue) => setSelectedLocation(newValue || "")}
+            onInputChange={(e, newInputValue) => setSelectedLocation(newInputValue)}
             renderInput={(params) => <TextField {...params} label="Location" />}
             freeSolo
           />
+          </Box>
         </MenuItem>
 
         <MenuItem>

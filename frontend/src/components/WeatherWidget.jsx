@@ -1,23 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { fetchWeather } from "../services/api";
 import WeatherCard from "../components/WeatherCard"
+import getGeolocation from "../services/location";
 import { motion, AnimatePresence } from "framer-motion";
 
 
 function WeatherWidget() {
   const [data, setData] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [location, setLocation] = useState("Portland, US");
+
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const data = await getGeolocation();
+        setLocation(data.city + ", " + data.country);
+      } catch (err) {
+        setError(err);
+        setLocation("Portland, US")
+      }
+    };
+  
+    fetchLocation();
+  }, []);
 
   // Run only once when component mounts
   useEffect(() => {
     const getWeather = async () => {
-      const weatherData = await fetchWeather();
+      const weatherData = await fetchWeather(location);
       // const weatherData = true;
       setData(weatherData);
     };
 
     getWeather();
-  }, []); 
+  }, [location]); 
 
   const handleWeatherClick = () => {
     setIsFormOpen(true);

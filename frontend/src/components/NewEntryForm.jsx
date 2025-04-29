@@ -11,15 +11,18 @@ function NewEntryForm({ onClose, onSave }) {
 
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   getGeolocation()
-  //     .then((data) => {
-  //       setLocation(data);
-  //     })
-  //     .catch((err) => {
-  //       setError(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const data = await getGeolocation();
+        setLocation(data.city + ", " + data.country);
+      } catch (err) {
+        setError(err);
+      }
+    };
+  
+    fetchLocation();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
