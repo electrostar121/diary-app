@@ -4,22 +4,59 @@ import DiaryList from "../components/DiaryList";
 import NewEntryForm from "../components/NewEntryForm";
 import { fetchEntries, createEntry } from "../services/api";
 import "../styles/index.css";
+import axios from "axios";
 
 function Dashboard() {
   const [entries, setEntries] = useState([]);
+  const [allEntries, setAllEntries] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
-    loadEntries();
+    fetchAllEntries();
   }, []);
 
-  const loadEntries = async () => {
+  const fetchAllEntries = async () => {
     try {
-      const data = await fetchEntries();
-      setEntries(data);
+      const token = localStorage.getItem("jwt");
+      const response = await axios.get("http://localhost:5000/api/diary", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setAllEntries(response.data);
     } catch (error) {
-      console.error("Error loading entries:", error);
+      console.error("Error fetching all entries:", error);
     }
+  };
+
+  const handleSearch = async ({ search, tag, location }) => {
+    if (!search && !tag && !location) {
+      setIsSearching(false);
+      setEntries([]);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("jwt");
+      const params = {};
+      if (search) params.search = search;
+      if (tag) params.tag = tag;
+      if (location) params.location = location;
+
+      const response = await axios.get("http://localhost:5000/api/diary", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setEntries(response.data);
+      setIsSearching(true);
+    } catch (error) {
+      console.error("Error fetching entries:", error);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setIsSearching(false);
+    setEntries([]);
   };
 
   const handleNewEntryClick = () => {
@@ -34,18 +71,20 @@ function Dashboard() {
     try {
       await createEntry(newEntry);
       setIsFormOpen(false);
-      // Refresh the list after saving
-      loadEntries();
+      await fetchAllEntries(); 
     } catch (error) {
       console.error("Error saving entry:", error);
     }
   };
 
+  const entriesToDisplay = isSearching ? entries : allEntries; 
+
   return (
     <div style={styles.container}>
-      <Header />
+      <Header onSearch={handleSearch} onClear={handleClearSearch} />
+      
       <div style={isFormOpen ? styles.blurredContent : styles.content}>
-        <DiaryList entries={entries} />
+        <DiaryList entries={entriesToDisplay} isSearching={isSearching} />
         <button style={styles.newEntryButton} onClick={handleNewEntryClick}>+</button>
       </div>
 

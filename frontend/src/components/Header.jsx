@@ -1,26 +1,24 @@
-import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
+import React, { useState,  useContext } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  InputBase,
+  Autocomplete,
+  TextField,
+  Button,
+  Menu,
+  MenuItem,
+  Box,
+  Avatar
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import Avatar from "@mui/material/Avatar";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import Button from '@mui/material/Button';
-import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import axios from "axios";
-
-import DiaryList from "./DiaryList"
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import TuneIcon from "@mui/icons-material/Tune"; 
+import { styled, alpha } from "@mui/material/styles";
 import WeatherWidget from "../components/WeatherWidget";
+import { AuthContext } from "../context/AuthContext";
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -52,31 +50,48 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
+      "&:focus": { width: "20ch" },
     },
   },
 }));
 
-function Header() {
+function Header({ onSearch, onClear }) {
   const { user, logout } = useContext(AuthContext);
   const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [filterBy, setFilterBy] = React.useState("");
-  const [entries, setEntries] = React.useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null); // For Filter menu
+  const [userAnchorEl, setUserAnchorEl] = useState(null);
   const tagOptions = ["Food", "Travel", "Technology", "Health"];
   const locationOptions = ["New York", "Los Angeles", "Chicago", "Miami"];
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedTag, setSelectedTag] = React.useState("");
-  const [selectedLocation, setSelectedLocation] = React.useState("");
-  const [isSearching, setIsSearching] = React.useState(false);
-  
+
+  const handleSearchClick = () => {
+    onSearch({
+      search: searchQuery,
+      tag: selectedTag,
+      location: selectedLocation,
+    });
+    setIsSearching(true);
+  };
+
+  const handleClearClick = () => {
+    setSearchQuery("");
+    setSelectedTag("");
+    setSelectedLocation("");
+    onClear();
+    setIsSearching(false);
+  };
+
+  const handleClose = () => {
+    setUserAnchorEl(null);
+  };
+
   const handleLogout = () => {
     logout();
     window.location.href = "/";
@@ -87,151 +102,83 @@ function Header() {
   };
 
   const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const { token } = useContext(AuthContext);
-
-
-  const handleClearSearch = async () => {
-    try {
-      setSearchQuery("");
-      setSelectedTag("");
-      setSelectedLocation("");
-  
-      const response = await axios.get("http://localhost:5000/api/diary", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-  
-      setEntries(response.data);
-      setIsSearching(false); 
-    } catch (error) {
-      console.error("Error clearing search:", error);
-    }
-  };
-  
-
-  const handleSearch = async () => {
-    try {
-      const params = {};
-      if (searchQuery) params.search = searchQuery;
-      if (selectedTag) params.tag = selectedTag.toLowerCase();
-      if (selectedLocation) params.location = selectedLocation;
-  
-      const response = await axios.get("http://localhost:5000/api/diary", {
-        params: params,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-  
-      setEntries(response.data);
-      setIsSearching(true);  
-  
-    } catch (error) {
-      console.error("Error fetching entries:", error);
-    }
+    setUserAnchorEl(event.currentTarget);
   };
 
-
-  const handleFilterChange = (event) => {
-    setFilterBy(event.target.value);
+  const handleFilterClick = (event) => {
+    setFilterAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleFilterClose = () => {
+    setFilterAnchorEl(null);
   };
 
+ 
   return (
-    <Box>
+    <>
       <AppBar position="static">
         <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-            {user && user.name}'s Secret Diary 🤫
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Secret Diary
           </Typography>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
+                if (e.key === "Enter") {
+                  handleSearchClick();
                 }
               }}
+
             />
           </Search>
-          <WeatherWidget/>
-          <Button 
-              variant="contained" 
-              color="primary" 
-              onClick={handleSearch}
-              sx={{ ml: 2 }}
-            >
-              Search
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleClearSearch}
-              sx={{ ml: 1 }}
-              disabled={!isSearching} 
-            >
-              X
-            </Button>
 
-          <Autocomplete
-            disablePortal
-            id="tag-filter"
-            options={tagOptions}
-            sx={{ width: 150, ml: 2 }}
-            value={selectedTag}
-            onChange={(event, newValue) => {
-              setSelectedTag(newValue || "");
-            }}
-            renderInput={(params) => <TextField {...params} label="Tag" />}
-            freeSolo
-          />
+          <IconButton onClick={handleFilterClick} color="inherit" sx={{ ml: 1 }}>
+            <TuneIcon />
+          </IconButton>
 
-          <Autocomplete
-            disablePortal
-            id="location-filter"
-            options={locationOptions}
-            sx={{ width: 150, ml: 2 }}
-            value={selectedLocation}
-            onChange={(event, newValue) => {
-              setSelectedLocation(newValue || "");
-            }}
-            renderInput={(params) => <TextField {...params} label="Location" />}
-            freeSolo
-          />
 
+                      {isSearching && (
+              <Button
+                onClick={handleClearClick}
+                variant="outlined"
+                size="medium"
+                sx={{
+                  ml: 1,
+                  color: "white",
+                  borderColor: "white",
+                  "&:hover": {
+                    borderColor: "white",
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                  },
+                }}
+              >
+                Clear
+              </Button>
+            )}
+          <WeatherWidget />
+
+           {/* User Avatar and Menu */}
           {user && (
-            <div>
+            <Box>
               <IconButton
                 size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+                sx={{ alignSelf: { xs: "center", sm: "auto" } }}
               >
                 <Avatar alt={user.name} src={user.picture} />
               </IconButton>
 
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={userAnchorEl}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "right",
@@ -241,20 +188,65 @@ function Header() {
                   vertical: "top",
                   horizontal: "right",
                 }}
-                open={Boolean(anchorEl)}
+                open={Boolean(userAnchorEl)}
                 onClose={handleClose}
               >
                 <MenuItem disabled>{user.name}</MenuItem>
-
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
-            </div>
+            </Box>
           )}
         </Toolbar>
       </AppBar>
-      <DiaryList entries={entries} />
-    </Box>
+
+      <Menu
+        anchorEl={filterAnchorEl}
+        open={Boolean(filterAnchorEl)}
+        onClose={handleFilterClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <MenuItem disableRipple>
+          <Autocomplete
+            disablePortal
+            options={tagOptions}
+            sx={{ width: 200 }}
+            value={selectedTag}
+            onChange={(e, newValue) => setSelectedTag(newValue || "")}
+            renderInput={(params) => <TextField {...params} label="Tag" />}
+            freeSolo
+          />
+        </MenuItem>
+
+        <MenuItem disableRipple>
+          <Autocomplete
+            disablePortal
+            options={locationOptions}
+            sx={{ width: 200 }}
+            value={selectedLocation}
+            onChange={(e, newValue) => setSelectedLocation(newValue || "")}
+            renderInput={(params) => <TextField {...params} label="Location" />}
+            freeSolo
+          />
+        </MenuItem>
+
+        <MenuItem>
+          <Button
+            onClick={() => {
+              handleSearchClick();
+              handleFilterClose();
+            }}
+            variant="contained"
+            size="small"
+          >
+            Apply
+          </Button>
+        </MenuItem>
+      </Menu>
+
+     
+    </>
   );
-};
+}
 
 export default Header;
