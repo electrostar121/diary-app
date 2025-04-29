@@ -51,4 +51,10 @@ export async function updateEntry(entry) {
   console.log(response.data)
   return response.data;
 }
+
+export async function deleteEntry(entry) {
+  const response = await api.delete(`/diary/${entry._id}`,entry);
+  console.log(response.data)
+  return response.data;
+}
 export default api;

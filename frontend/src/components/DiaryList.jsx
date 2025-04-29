@@ -34,7 +34,7 @@ function DiaryList({ entries, isSearching }) {
 const styles = {
   list: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, auto))",
     gap: "20px",
     padding: "20px",
   },

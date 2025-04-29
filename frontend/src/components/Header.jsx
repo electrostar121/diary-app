@@ -74,7 +74,7 @@ function Header({ onSearch, onClear }) {
   const handleSearchClick = () => {
     onSearch({
       search: searchQuery,
-      tag: selectedTag,
+      tag: selectedTag.toLowerCase(),
       location: selectedLocation,
     });
     setIsSearching(true);

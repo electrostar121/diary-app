@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { deleteEntry } from "../services/api";
 import {
   Box,
   Card,
@@ -17,8 +18,12 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
   const [reflection, setReflection] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setOpen(false);
-    setReflection(""); // Clear on close
+    window.location.reload();
+  };
+
+  const handleDelete = async () => {
+    const response = await deleteEntry(entry);
+    window.location.reload();
   };
 
   const handleChange = (event) => {
@@ -123,9 +128,6 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
             variant="outlined"
           />
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Exit
-          </Button>
           <Button onClick={handleSave} variant="contained" color="primary">
             Save
           </Button>
@@ -134,10 +136,13 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
         <DialogContent dividers>
 
           <Typography variant="body2" whiteSpace="pre-line">
-            Tag: {entry.tags}
+            Tags: {entry.tags?.join(", ") || "None"}
           </Typography>
         </DialogContent>
         <DialogActions>
+        <Button onClick={handleDelete} color="error">
+            Delete Entry
+          </Button>
           <Button onClick={handleClose} color="primary">
             Close
           </Button>
