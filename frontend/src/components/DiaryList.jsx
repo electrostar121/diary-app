@@ -1,5 +1,6 @@
 import React from "react";
 import DiaryEntryCard from "./DiartEntryCard";
+import { updateEntry } from "../services/api";
 
 import { Typography } from "@mui/material";
 function DiaryList({ entries, isSearching }) {
@@ -23,7 +24,9 @@ function DiaryList({ entries, isSearching }) {
   return (
     <div style={styles.list}>
       {entries.map((entry) => (
-        <DiaryEntryCard key={entry._id} entry={entry} />
+        <DiaryEntryCard key={entry._id} entry={entry} onSaveReflection={async (updatedEntry)  =>  {
+          const data = await updateEntry(updatedEntry);
+        }}/>
       ))}
     </div>
   );

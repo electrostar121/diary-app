@@ -43,4 +43,9 @@ export async function fetchLocation(lon, lat){
   return response.data;
 }
 
+export async function updateEntry(entry) {
+  const response = await api.put(`/diary/${entry._id}`,entry);
+  console.log(response.data)
+  return response.data;
+}
 export default api;

@@ -1,35 +1,149 @@
-import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+} from "@mui/material";
 
-function DiaryEntryCard({ entry }) {
+function DiaryEntryCard({ key, entry, onSaveReflection }) {
+  const [open, setOpen] = useState(false);
+  const [reflection, setReflection] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setReflection(""); // Clear on close
+  };
+
+  const handleChange = (event) => {
+    setReflection(event.target.value);
+  };
+
+  const handleSave = () => {
+    const updatedEntry = {
+      ...entry,
+      reflection: reflection,
+    };
+    if (onSaveReflection) {
+      onSaveReflection(updatedEntry);
+    }
+  
+    setOpen(false);
+  };
+  const icon = entry.weather?.icon || "01d"; // fallback to clear sky icon
+  const condition = entry.weather?.condition || "Unknown";
+  const temperature = entry.weather?.temperature ?? "N/A";
+  const weather_location = entry.weather?.location ?? "N/A";
+
   return (
-    <Card
-      sx={{
-        maxWidth: 400,
-        backgroundColor: "#f0f0f0",
-        borderRadius: 2,
-        boxShadow: 3,
-        overflow: "hidden",
-      }}
-    >
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {entry.title}
+    <div>
+      <Card
+        onClick={handleOpen}
+        sx={{
+          maxWidth: 400,
+          backgroundColor: "#f0f0f0",
+          borderRadius: 2,
+          boxShadow: 3,
+          overflow: "hidden",
+          cursor: "pointer", // Makes it feel interactive
+          "&:hover": {
+            boxShadow: 6,
+          },
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            {entry.title}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {entry.content}
+          </Typography>
+        </CardContent>
+      </Card>
+
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+        <DialogTitle>{entry.title}</DialogTitle>
+        <DialogContent dividers>
+        <Typography variant="h6">Diary Content</Typography>
+        <Typography variant="body1" whiteSpace="pre-line">
+            {entry.content}
         </Typography>
-        <Typography
-          variant="body2"
+        </DialogContent>
+        <DialogContent dividers>
+        <Typography variant="h6" gutterBottom>Weather</Typography>
+
+        <Box
           sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            mb: 2,
           }}
         >
-          {entry.content}
-        </Typography>
-      </CardContent>
-    </Card>
+          <Box
+            component="img"
+            src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
+            alt="Weather"
+            sx={{
+              width: 64,
+              height: 64,
+            }}
+          />
+          <Box>
+            <Typography variant="body1">Weather: {condition || "UNKNOWN"}</Typography>
+            <Typography variant="body1">Temperature: {temperature || "∞"} °F</Typography>
+            <Typography variant="body1">Location: {weather_location || "VOID"}</Typography>
+          </Box>
+        </Box>
+      </DialogContent>
+        <DialogContent dividers>
+        <Typography variant="h6">Reflection</Typography>
+        <TextField
+            fullWidth
+            multiline
+            minRows={3}
+            placeholder={entry.reflection || "Write your reflection here..."}
+            value={reflection || entry.reflection}
+            onChange={handleChange}
+            variant="outlined"
+          />
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Exit
+          </Button>
+          <Button onClick={handleSave} variant="contained" color="primary">
+            Save
+          </Button>
+        </DialogActions>
+        </DialogContent>
+        <DialogContent dividers>
+
+          <Typography variant="body2" whiteSpace="pre-line">
+            Tag: {entry.tags}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
 
