@@ -5,12 +5,23 @@ import { motion, AnimatePresence } from "framer-motion";
 function NewEntryForm({ onClose, onSave }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [location, setLocation] = useState("");
+  const [tags, setTags] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ title, content });
+    const entry = {
+      "title": title,
+      "content": content,
+      "reflection": "",
+      "tags": tags.split(",").map(function(item) {return item.trim().toLowerCase();}).filter(function(item){if(item === ""){return false}else{return true};}),
+      "location": location
+    }
+    onSave(entry);
     setTitle("");
     setContent("");
+    setLocation("");
+    setTags("");
   };
 
   return (
@@ -45,6 +56,21 @@ function NewEntryForm({ onClose, onSave }) {
             style={styles.textarea}
             required
           ></textarea>
+          <input
+            type="text"
+            placeholder="City, Country"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            style={styles.input}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Tags (comma seperated)"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            style={styles.input}
+          />
           <div style={styles.actions}>
             <button className="save-button" type="submit" style={styles.saveButton}>Save</button>
             <button className="cancel-button" type="button" onClick={onClose} style={styles.cancelButton}>Cancel</button>
@@ -86,6 +112,7 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "0.25rem",
     padding: "0.625rem",
+    fontFamily: "system-ui, Avenir, Helvetica, Arial, sans-serif"
   },
   textarea: {
     width: "100%",
@@ -97,6 +124,7 @@ const styles = {
     borderRadius: "0.25rem",
     padding: "0.625rem",
     resize: "none",
+    fontFamily: "system-ui, Avenir, Helvetica, Arial, sans-serif"
   },
   actions: {
     display: "flex",

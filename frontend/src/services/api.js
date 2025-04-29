@@ -19,6 +19,7 @@ export async function fetchEntries() {
 }
 
 export async function createEntry(entry) {
+  console.log(entry);
   const response = await api.post("/diary", entry);
   return response.data;
 }

@@ -4,7 +4,7 @@ import { fetchWeather } from "./weatherController.js";
 export const getAllEntries = async(req, res) => {
     try{
         const { search, tag, location } = req.query;
-        let filter = {user: req.user._id}; // No authentication in Part 1, so no user filter is applied
+        let filter = {user: req.user.userId}; // No authentication in Part 1, so no user filter is applied
         // Search filter (Matches title or content)
         if (search) {
             filter.$or = [
@@ -36,7 +36,7 @@ export const getEntryById = async(req, res) => {
             return res.status(404).json({ message: "Diary entry not found" });
         }
 
-        if (entry.user.toString() !== req.user._id.toString()) {
+        if (entry.user.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ message: "Forbidden" });
         }
         
@@ -50,9 +50,9 @@ export const createEntry = async (req, res) => {
     try {
         const { title, content, reflection, tags, location } = req.body;
         // Fetch weather data if location is provided
-        const weatherData = location ? await fetchWeather(location) : null;
+        const weatherData = await fetchWeather(location);
         const newEntry = new DiaryEntry({
-            user: req.user._id,
+            user: req.user.userId,
             title,
             content,
             reflection,
@@ -60,9 +60,12 @@ export const createEntry = async (req, res) => {
             location,
             weather: weatherData
         });
+        console.log(newEntry);
         await newEntry.save();
         res.status(201).json(newEntry);
     } catch (error) {
+        console.log("Monkey");
+        console.log(error.message);
         res.status(400).json({ message: error.message });
     }
 };
@@ -76,7 +79,7 @@ export const updateEntry = async(req, res) => {
             return res.status(404).json({ message: "Diary entry not found" });
         }
 
-        if (entry.user.toString() !== req.user._id.toString()) {
+        if (entry.user.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ message: "Forbidden" });
         }
 
@@ -99,7 +102,7 @@ export const deleteEntry = async(req, res) => {
             return res.status(404).json({ message: "Diary entry not found" });
         }
 
-        if (entry.user.toString() !== req.user._id.toString()) {
+        if (entry.user.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ message: "Forbidden" });
         }
 

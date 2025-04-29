@@ -22,7 +22,7 @@ export const fetchWeather = async (location = "Portland, US") => {
         };
     } catch (error) {
         console.error("Error fetching weather data:", error.message);
-        return { error: "Could not fetch weather data" }; // Return a fallback value
+        return null; // Return a fallback value
     }
 };
 

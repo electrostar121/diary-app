@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { GoogleLogin } from '@react-oauth/google';
 import { AuthContext } from "../context/AuthContext";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import api from "../services/api";
 
 function Login() {
@@ -25,13 +27,15 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Welcome to ThoughtStream</h1>
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
+       <Typography variant="h3" component="h1" gutterBottom sx={{ fontFamily: "system-ui, Avenir, Helvetica, Arial, sans-serif", alignItems: "center", fontWeight: "bold" }}>
+        ThoughtStream
+      </Typography>
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={handleError}
       />
-    </div>
+    </Box>
   );
 }
 
