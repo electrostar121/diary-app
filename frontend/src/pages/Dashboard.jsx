@@ -44,7 +44,6 @@ function Dashboard() {
   return (
     <div style={styles.container}>
       <Header />
-
       <div style={isFormOpen ? styles.blurredContent : styles.content}>
         <DiaryList entries={entries} />
         <button style={styles.newEntryButton} onClick={handleNewEntryClick}>+</button>
