@@ -35,3 +35,35 @@ export const getWeather = async(req, res) => {
         res.status(500).json({ message: "Server Error: Unable to fetch weather" });
     }
 };
+
+export const fetchLocation = async (lat, lon) => {
+    try{
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`Weather API error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        return data;
+    } catch (error) {
+        console.error("Error fetching location data:", error.message);
+        return null; // Return a fallback value
+    }
+}
+
+export const getLocation = async(req, res) => {
+    try{
+        const {lat, lon} = req.body;
+        const locationData = fetchLocation(lat, lon);
+
+        res.status(200).json(locationData);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error: Unable to fetch location" });
+    }
+}

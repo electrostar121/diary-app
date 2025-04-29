@@ -33,4 +33,14 @@ export async function fetchWeather() {
   return response.data;
 }
 
+export async function fetchLocation(lon, lat){
+  const params = {};
+  params.lon = lon;
+  params.lat = lat;
+  const response = await api.get("/weather/location", {
+    params: params
+  });
+  return response.data;
+}
+
 export default api;

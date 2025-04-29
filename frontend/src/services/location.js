@@ -1,3 +1,5 @@
+import { fetchLocation } from "./api";
+
 const getGeolocation = () => {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
@@ -6,10 +8,9 @@ const getGeolocation = () => {
     
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                resolve({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
+                resolve(
+                    fetchLocation(position.coords.longitude, position.coords.latitude)
+                );
             },
             (error) => {
                 reject("Unable to retrieve your location.");
