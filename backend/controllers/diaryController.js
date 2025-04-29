@@ -60,9 +60,12 @@ export const createEntry = async (req, res) => {
             location,
             weather: weatherData
         });
+        console.log(newEntry);
         await newEntry.save();
         res.status(201).json(newEntry);
     } catch (error) {
+        console.log("Monkey");
+        console.log(error.message);
         res.status(400).json({ message: error.message });
     }
 };
