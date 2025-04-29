@@ -136,7 +136,7 @@ function Header() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            {user && user.name}'s Secret Diary 😮
+            {user && user.name}'s Secret Diary 🤫
           </Typography>
           <Search>
             <SearchIconWrapper>
