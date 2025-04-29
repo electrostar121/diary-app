@@ -1,29 +1,36 @@
 import React from "react";
+import { Card, CardContent, Typography } from "@mui/material";
 
 function DiaryEntryCard({ entry }) {
   return (
-    <div style={styles.card}>
-      <h3>{entry.title}</h3>
-      <p style={styles.contentPreview}>{entry.content}</p>
-    </div>
+    <Card
+      sx={{
+        maxWidth: 400,
+        backgroundColor: "#f0f0f0",
+        borderRadius: 2,
+        boxShadow: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          {entry.title}
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {entry.content}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 }
-
-const styles = {
-  card: {
-    padding: "15px",
-    backgroundColor: "#f0f0f0",
-    borderRadius: "8px",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-  },
-  contentPreview: {
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    display: "-webkit-box",
-    WebkitLineClamp: 3,
-    WebkitBoxOrient: "vertical",
-    maxHeight: "4.5em",
-  },
-};
 
 export default DiaryEntryCard;
