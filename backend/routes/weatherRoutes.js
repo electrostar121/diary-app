@@ -1,5 +1,5 @@
 import express from "express";
-import { getWeather } from "../controllers/weatherController.js";
+import { getLocation, getWeather } from "../controllers/weatherController.js";
 import authenticateJWT  from "../middleware/authMiddleware.js";
 
 const weatherRoutes = express.Router();
@@ -10,5 +10,6 @@ const weatherRoutes = express.Router();
 * @access Public 
 */
 weatherRoutes.get("/", authenticateJWT, getWeather);
+weatherRoutes.get("/location/", authenticateJWT, getLocation);
 
 export default weatherRoutes;

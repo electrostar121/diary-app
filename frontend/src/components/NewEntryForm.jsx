@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/index.css";
 import getGeolocation from "../services/location";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,15 +11,15 @@ function NewEntryForm({ onClose, onSave }) {
 
   const [error, setError] = useState(null);
 
-  const fetchLocation = () => {
-    getGeolocation()
-      .then((data) => {
-        setLocation(data);
-      })
-      .catch((err) => {
-        setError(err);
-      });
-  };
+  // useEffect(() => {
+  //   getGeolocation()
+  //     .then((data) => {
+  //       setLocation(data);
+  //     })
+  //     .catch((err) => {
+  //       setError(err);
+  //     });
+  // }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
