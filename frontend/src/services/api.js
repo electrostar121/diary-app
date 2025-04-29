@@ -23,4 +23,13 @@ export async function createEntry(entry) {
   return response.data;
 }
 
+/**
+ * Fetch the current weather with the openWeather API
+ */
+export async function fetchWeather() {
+  const response = await api.get("/weather");
+  // console.log(response.data);
+  return response.data;
+}
+
 export default api;

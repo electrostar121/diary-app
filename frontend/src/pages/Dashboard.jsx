@@ -44,7 +44,6 @@ function Dashboard() {
   return (
     <div style={styles.container}>
       <Header />
-
       <div style={isFormOpen ? styles.blurredContent : styles.content}>
         <h1>Welcome to your Dashboard</h1>
         <DiaryList entries={entries} />

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import WeatherWidget from "../components/WeatherWidget";
 
 function Header() {
   const { user, logout } = useContext(AuthContext);
@@ -12,6 +13,7 @@ function Header() {
   return (
     <header style={styles.header}>
       <h1>ThoughtStream 📝</h1>
+      <WeatherWidget/>
       {user && (
         <div style={styles.userInfo}>
           <img src={user.picture} alt="Profile" style={styles.avatar} />
