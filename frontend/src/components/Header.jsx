@@ -20,6 +20,7 @@ import axios from "axios";
 import DiaryList from "./DiaryList"
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import WeatherWidget from "../components/WeatherWidget";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -152,7 +153,7 @@ function Header() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            Aiden Dickson's Secret Diary 😮
+            {user && user.name}'s Secret Diary 🤫
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -170,6 +171,7 @@ function Header() {
               }}
             />
           </Search>
+          <WeatherWidget/>
           <Button 
               variant="contained" 
               color="primary" 

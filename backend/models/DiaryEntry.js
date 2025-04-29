@@ -28,6 +28,7 @@ const diarySchema = new mongoose.Schema({
             default: []
         },
         weather: {
+            icon: {type: String }, // e.g. "04d"
             condition: { type: String }, // e.g., "Sunny", "Cloudy"
             temperature: { type: Number }, // Temperature in °F
             location: { type: String } // City, country - user specified
