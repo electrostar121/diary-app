@@ -1,5 +1,5 @@
 import React from "react";
-import DiaryEntryCard from "./DiartEntryCard"
+import DiaryEntryCard from "./DiartEntryCard";
 
 function DiaryList({ entries }) {
   return (
@@ -14,9 +14,8 @@ function DiaryList({ entries }) {
 const styles = {
   list: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
-    gap: "20px",
-    marginTop: "20px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "20px"
   },
 };
 

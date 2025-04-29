@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/index.css";
+import getGeolocation from "../services/location";
 import { motion, AnimatePresence } from "framer-motion";
 
 function NewEntryForm({ onClose, onSave }) {
@@ -7,6 +8,18 @@ function NewEntryForm({ onClose, onSave }) {
   const [content, setContent] = useState("");
   const [location, setLocation] = useState("");
   const [tags, setTags] = useState("");
+
+  const [error, setError] = useState(null);
+
+  const fetchLocation = () => {
+    getGeolocation()
+      .then((data) => {
+        setLocation(data);
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
