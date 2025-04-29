@@ -127,103 +127,122 @@ function Header() {
   };
 
   return (
-    <Box>
+<Box>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar
+          sx={{
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: { sm: "space-between" },
+            gap: { xs: 1, sm: 2 },
+          }}
+        >
+          {/* Title */}
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            sx={{
+              flexGrow: { sm: 1 },
+              textAlign: { xs: "center", sm: "left" },
+            }}
           >
             {user && user.name}'s Secret Diary 🤫
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                }
-              }}
-            />
-          </Search>
-          <WeatherWidget/>
-          <Button 
-              variant="contained" 
-              color="primary" 
+
+          {/* Search bar */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "stretch", sm: "center" },
+              gap: 1,
+              width: { xs: "100%", sm: "auto" },
+            }}
+          >
+
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+              />
+            </Search>
+
+            <Button
+              variant="contained"
+              color="primary"
               onClick={handleSearch}
-              sx={{ ml: 2 }}
+              sx={{ whiteSpace: "nowrap" }}
             >
               Search
             </Button>
 
-          <Autocomplete
-            disablePortal
-            id="tag-filter"
-            options={tagOptions}
-            sx={{ width: 150, ml: 2 }}
-            value={selectedTag}
-            onChange={(event, newValue) => {
-              setSelectedTag(newValue || "");
-            }}
-            renderInput={(params) => <TextField {...params} label="Tag" />}
-            freeSolo
-          />
+            <Autocomplete
+              disablePortal
+              id="tag-filter"
+              options={tagOptions}
+              sx={{ width: 150 }}
+              value={selectedTag}
+              onChange={(event, newValue) => setSelectedTag(newValue || "")}
+              renderInput={(params) => <TextField {...params} label="Tag" />}
+              freeSolo
+            />
 
-          <Autocomplete
-            disablePortal
-            id="location-filter"
-            options={locationOptions}
-            sx={{ width: 150, ml: 2 }}
-            value={selectedLocation}
-            onChange={(event, newValue) => {
-              setSelectedLocation(newValue || "");
-            }}
-            renderInput={(params) => <TextField {...params} label="Location" />}
-            freeSolo
-          />
+            <Autocomplete
+              disablePortal
+              id="location-filter"
+              options={locationOptions}
+              sx={{ width: 150 }}
+              value={selectedLocation}
+              onChange={(event, newValue) => setSelectedLocation(newValue || "")}
+              renderInput={(params) => <TextField {...params} label="Location" />}
+              freeSolo
+            />
+            <WeatherWidget />
 
-          {user && (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <Avatar alt={user.name} src={user.picture} />
-              </IconButton>
+            {/* User Avatar and Menu */}
+            {user && (
+              <Box>
+                <IconButton
+                  size="large"
+                  onClick={handleMenu}
+                  color="inherit"
+                  sx={{ alignSelf: { xs: "center", sm: "auto" } }}
+                >
+                  <Avatar alt={user.name} src={user.picture} />
+                </IconButton>
 
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem disabled>{user.name}</MenuItem>
-
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </div>
-          )}
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem disabled>{user.name}</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </Box>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>
