@@ -15,7 +15,13 @@ import {
 
 function DiaryEntryCard({ key, entry, onSaveReflection }) {
   const [open, setOpen] = useState(false);
-  const [reflection, setReflection] = useState("");
+  const [editedContent, setEditedContent] = useState(entry.content || "");
+  const [reflection, setReflection] = useState(entry.reflection || "");
+  const [editedTitle, setEditedTitle] = useState(entry.title || "");
+  const [editedTags, setEditedTags] = useState(entry.tags?.join(", ") || "");
+  const [editedLocation, setEditedLocation] = useState(entry.weather?.location || "");
+
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     window.location.reload();
@@ -30,17 +36,40 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
     setReflection(event.target.value);
   };
 
+  const handleContentChange = (e) => {
+    setEditedContent(e.target.value);
+  };
+  
+  const handleReflectionChange = (e) => {
+    setReflection(e.target.value);
+  };
+
+  const handleTitleChange = (e) => setEditedTitle(e.target.value);
+  const handleTagsChange = (e) => setEditedTags(e.target.value);
+  const handleLocationChange = (e) => setEditedLocation(e.target.value);
+
+
   const handleSave = () => {
     const updatedEntry = {
       ...entry,
+      title: editedTitle,
+      content: editedContent,
       reflection: reflection,
+      tags: editedTags.split(",").map(tag => tag.trim()),
+      weather: {
+        ...entry.weather,
+        location: editedLocation,
+      },
     };
+  
     if (onSaveReflection) {
       onSaveReflection(updatedEntry);
     }
   
     setOpen(false);
+    window.location.reload();
   };
+
   const icon = entry.weather?.icon || "01d"; // fallback to clear sky icon
   const condition = entry.weather?.condition || "Unknown";
   const temperature = entry.weather?.temperature ?? "N/A";
@@ -87,12 +116,26 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
       </Card>
 
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle>{entry.title}</DialogTitle>
+      <DialogTitle>
+      <TextField
+        fullWidth
+        variant="standard"
+        value={editedTitle}
+        onChange={handleTitleChange}
+        placeholder="Entry Title"
+      />
+    </DialogTitle>
         <DialogContent dividers>
-        <Typography variant="h6">Diary Content</Typography>
-        <Typography variant="body1" whiteSpace="pre-line">
-            {entry.content}
-        </Typography>
+          <Typography variant="h6">Diary Content</Typography>
+          <TextField
+            fullWidth
+            multiline
+            minRows={3}
+            placeholder="Edit your content here..."
+            value={editedContent}
+            onChange={handleContentChange}
+            variant="outlined"
+          />
         </DialogContent>
         <DialogContent dividers>
         <Typography variant="h6" gutterBottom>Weather</Typography>
@@ -117,7 +160,14 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
           <Box>
             <Typography variant="body1">Weather: {condition || "UNKNOWN"}</Typography>
             <Typography variant="body1">Temperature: {temperature || "∞"} °F</Typography>
-            <Typography variant="body1">Location: {weather_location || "VOID"}</Typography>
+            <Typography variant="body1">Location:</Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              value={editedLocation}
+              onChange={handleLocationChange}
+            />
           </Box>
         </Box>
       </DialogContent>
@@ -129,22 +179,25 @@ function DiaryEntryCard({ key, entry, onSaveReflection }) {
             minRows={3}
             placeholder={entry.reflection || "Write your reflection here..."}
             value={reflection || entry.reflection}
-            onChange={handleChange}
+            onChange={handleReflectionChange}
             variant="outlined"
           />
+        
+        </DialogContent>
+        <DialogContent dividers>
+          <Typography variant="h6">Tags</Typography>
+          <TextField
+            fullWidth
+            value={editedTags}
+            onChange={handleTagsChange}
+            placeholder="Comma-separated tags"
+            variant="outlined"
+          />
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleSave} variant="contained" color="primary">
             Save
           </Button>
-        </DialogActions>
-        </DialogContent>
-        <DialogContent dividers>
-
-          <Typography variant="body2" whiteSpace="pre-line">
-            Tags: {entry.tags?.join(", ") || "None"}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
         <Button onClick={handleDelete} color="error">
             Delete Entry
           </Button>
