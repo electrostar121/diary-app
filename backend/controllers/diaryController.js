@@ -3,6 +3,7 @@ import { fetchWeather } from "./weatherController.js";
 
 export const getAllEntries = async(req, res) => {
     try{
+
         const { search, tag, location } = req.query;
         let filter = {user: req.user.userId}; // No authentication in Part 1, so no user filter is applied
         // Search filter (Matches title or content)
