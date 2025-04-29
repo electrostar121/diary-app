@@ -1,71 +1,80 @@
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import Avatar from '@mui/material/Avatar';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-
+import { styled, alpha } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
+import Avatar from "@mui/material/Avatar";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import Button from '@mui/material/Button';
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-
-
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
-    width: 'auto',
+    width: "auto",
   },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  width: '100%',
-  '& .MuiInputBase-input': {
+  color: "inherit",
+  width: "100%",
+  "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
       },
     },
   },
 }));
 
-
 function Header() {
-   const { user, logout } = useContext(AuthContext);
-   const [auth, setAuth] = React.useState(true);
-   const [anchorEl, setAnchorEl] = React.useState(null);
- 
+  const { user, logout } = useContext(AuthContext);
+  const [auth, setAuth] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [filterBy, setFilterBy] = React.useState("");
+  const [entries, setEntries] = React.useState([]);
+  const tagOptions = ["Food", "Travel", "Technology", "Health"];
+  const locationOptions = ["New York", "Los Angeles", "Chicago", "Miami"];
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedTag, setSelectedTag] = React.useState("");
+  const [selectedLocation, setSelectedLocation] = React.useState("");
+  
+  
   const handleLogout = () => {
     logout();
     window.location.href = "/";
@@ -78,6 +87,39 @@ function Header() {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const { token } = useContext(AuthContext);
+
+
+  const handleSearch = async () => {
+    try {
+    
+      const params = {};
+      if (searchQuery) params.search = searchQuery;
+      if (selectedTag) params.tag = selectedTag;
+      if (selectedLocation) params.location = selectedLocation;
+  
+      console.log("Token being sent:", token);
+
+      const response = await axios.get("http://localhost:5000/api/diary", {
+        params: params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      console.log("Entries:", response.data);
+  
+      setEntries(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching entries:", error);
+    }
+  };
+
+
+  const handleFilterChange = (event) => {
+    setFilterBy(event.target.value);
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -87,20 +129,11 @@ function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
             Aiden Dickson's Secret Diary 😮
           </Typography>
@@ -110,96 +143,89 @@ function Header() {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
             />
           </Search>
+          <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={handleSearch}
+              sx={{ ml: 2 }}
+            >
+              Search
+            </Button>
+
+          <Autocomplete
+            disablePortal
+            id="tag-filter"
+            options={tagOptions}
+            sx={{ width: 150, ml: 2 }}
+            value={selectedTag}
+            onChange={(event, newValue) => {
+              setSelectedTag(newValue || "");
+            }}
+            renderInput={(params) => <TextField {...params} label="Tag" />}
+            freeSolo
+          />
+
+          <Autocomplete
+            disablePortal
+            id="location-filter"
+            options={locationOptions}
+            sx={{ width: 150, ml: 2 }}
+            value={selectedLocation}
+            onChange={(event, newValue) => {
+              setSelectedLocation(newValue || "");
+            }}
+            renderInput={(params) => <TextField {...params} label="Location" />}
+            freeSolo
+          />
+
           {user && (
             <div>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <Avatar alt={user.name} src={user.picture} />
-            </IconButton>
-          
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              {/* Show the user's name at the top */}
-              <MenuItem disabled>{user.name}</MenuItem>
-          
-              {/* Logout button */}
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
-          </div>
-          
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <Avatar alt={user.name} src={user.picture} />
+              </IconButton>
+
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem disabled>{user.name}</MenuItem>
+
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
           )}
         </Toolbar>
       </AppBar>
     </Box>
   );
- 
-
-  // return (
-  //   <header style={styles.header}>
-  //     <h1>ThoughtStream 📝</h1>
-  //     {user && (
-  //       <div style={styles.userInfo}>
-  //         <img src={user.picture} alt="Profile" style={styles.avatar} />
-  //         <span style={styles.name}>{user.name}</span>
-  //         <button onClick={handleLogout} style={styles.logoutButton}>Logout</button>
-  //       </div>
-  //     )}
-  //   </header>
-  // );
-}
-
-// const styles = {
-//   header: {
-//     padding: "10px 20px",
-//     backgroundColor: "#4a90e2",
-//     color: "#fff",
-//     display: "flex",
-//     alignItems: "center",
-//     justifyContent: "space-between",
-//   },
-//   userInfo: {
-//     display: "flex",
-//     alignItems: "center",
-//     gap: "10px",
-//   },
-//   avatar: {
-//     width: "35px",
-//     height: "35px",
-//     borderRadius: "50%",
-//   },
-//   name: {
-//     fontWeight: "bold",
-//   },
-//   logoutButton: {
-//     padding: "6px 12px",
-//     backgroundColor: "#ff4d4d",
-//     color: "#fff",
-//     border: "none",
-//     borderRadius: "4px",
-//     cursor: "pointer",
-//   }
-// };
+};
 
 export default Header;
