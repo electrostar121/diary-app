@@ -27,10 +27,14 @@ npm install
 ### Step 2: Create .env file in backend
 
 ```
+MONGO_URI="mongodb+srv://<username>:<password>@cluster0.nahw65o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+WEATHER_API="<open weather api token>"
+GOOGLE_CLIENT_ID=<google client id>
+GOOGLE_CLIENT_SECRET=<google client secret>
+GOOGLE_CALLBACK_URL=http://localhost:5000/auth/google/callback
+SESSION_SECRET=<64 char generated secret>
 PORT=5000
-MONGO_URI=your-mongodb-connection-uri
-JWT_SECRET=your-very-secure-random-string
-GOOGLE_CLIENT_ID=your-google-oauth-client-id
+JWT_SECRET=<user generated secret>
 ```
 
 ### Step 3: Start Backend Server
@@ -52,6 +56,7 @@ npm install @react-oauth/google
 ```
 VITE_API_BASE_URL=http://localhost:5000/api
 VITE_GOOGLE_CLIENT_ID=your-google-oauth-client-id
+CLIENT_SECRET=secret-key-from-google-ouath
 ```
 
 ### Step 3: Setup the OAuth Client 
