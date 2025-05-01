@@ -112,3 +112,7 @@ The user can also press the filter button to open up a dropdown menu to filter e
 The website was designed for mobile viewports as well.
 
 ![mobile view](assets/10_mobile_view.png)
+
+## React Design Flow
+
+![react design](assets/react_design.png)
