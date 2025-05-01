@@ -116,3 +116,7 @@ The website was designed for mobile viewports as well.
 ## React Design Flow
 
 ![react design](assets/react_design.png)
+
+
+## Extra Credit
+For the extra we have the search feature which is incorporated with the filter which are location and tag.
